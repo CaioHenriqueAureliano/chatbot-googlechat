@@ -379,7 +379,8 @@ Selecione a opção desejada:
 
     resp_5_1: `🔑 *Reset/Troca de Senha*
 
-Para redefinir ou trocar sua senha, precisamos abrir um chamado com os detalhes (qual sistema/plataforma você está tentando acessar).
+*Aplicativos Vivo:* A alteração de senha não é realizada por este canal. Por favor, contate o Administrativo IPNET.
+*Google Workspace:* Para redefinição de senha, abra um chamado informando os detalhes da solicitação.
 
 👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
