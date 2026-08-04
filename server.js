@@ -216,8 +216,6 @@ app.post('/google-chat', async (req, res) => {
 
         const buildResponse = (textResponse) => {
             return {
-                text: textResponse,
-                actionResponse: { type: 'NEW_MESSAGE' },
                 hostAppDataAction: {
                     chatDataAction: {
                         createMessageAction: {
