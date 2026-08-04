@@ -1,4 +1,4 @@
-﻿require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const knowledge = require('./knowledge');
@@ -33,7 +33,7 @@ async function logInteraction(email, msgText, logData) {
             subcategoria: logData.subcategoria,
             problema: logData.problema
         });
-        console.log(Log salvo: [] );
+        console.log(`Log salvo: [${logData.categoria}]`);
     } catch (error) {
         console.error('Erro ao salvar log no sheets:', error.message);
     }
@@ -44,7 +44,7 @@ async function handleMessage(from, msgText) {
     const state = session.state;
     
     let logData = { categoria: 'Navegação', subcategoria: '-', problema: '-' };
-    let responseText = `;
+    let responseText = '';
 
     if (state === 'encerrado') {
         setSession(from, { state: 'menu_principal' });
@@ -197,14 +197,14 @@ app.post('/google-chat', async (req, res) => {
         const event = req.body;
         
         if (event.type === 'ADDED_TO_SPACE') {
-            return res.json({ text: Olá! Sou o assistente de Suporte Interno IPNET. Envie 'oi' para começarmos. });
+            return res.json({ text: "Olá! Sou o assistente de Suporte Interno IPNET. Envie 'oi' para começarmos." });
         }
 
         if (event.type === 'MESSAGE') {
             const from = (event.user && event.user.email) ? event.user.email : 'anonimo@ipnet.cloud';
             const msgText = (event.message && event.message.text) ? event.message.text.trim().toLowerCase() : 'oi';
 
-            console.log(📩 Nova mensagem de : );
+            console.log(`📩 Nova mensagem de : ${from}`);
 
             const result = await handleMessage(from, msgText);
             
@@ -220,19 +220,18 @@ app.post('/google-chat', async (req, res) => {
                 logInteraction(from, msgText, result.logData);
             }
 
-            return res.json({ text: result.text || Desculpe, não entendi. });
+            return res.json({ text: result.text || "Desculpe, não entendi." });
         }
 
         return res.json({});
         
     } catch (error) {
-        console.error(Erro interno no webhook:, error);
-        return res.json({ text: Ocorreu um erro interno. Tente novamente. });
+        console.error("Erro interno no webhook:", error);
+        return res.json({ text: "Ocorreu um erro interno. Tente novamente." });
     }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(✅ Servidor do Google Chat rodando na porta );
+    console.log(`✅ Servidor do Google Chat rodando na porta ${PORT}`);
 });
-
