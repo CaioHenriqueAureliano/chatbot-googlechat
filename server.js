@@ -47,7 +47,12 @@ async function logInteraction(email, msgText, logData) {
 //  ABRIR TICKET NO FRESHSERVICE
 // ═══════════════════════════════════════════════════
 async function openFreshserviceTicket(email, session, descricaoUsuario) {
-    const authHeader = 'Basic ' + Buffer.from(process.env.FRESHSERVICE_API_KEY + ':X').toString('base64');
+    const apiKey = process.env.FRESHSERVICE_API_KEY || process.env.FRESHDESK_API_KEY;
+    if (!apiKey) {
+        throw new Error("As variáveis de ambiente FRESHSERVICE_API_KEY ou FRESHDESK_API_KEY não foram encontradas no Render.");
+    }
+
+    const authHeader = 'Basic ' + Buffer.from(apiKey + ':X').toString('base64');
     const logData = session.lastLogData || {};
     const description = descricaoUsuario || `Chamado aberto via Chatbot Google Chat.<br><b>Problema:</b> ${logData.problema || '-'}`;
 
