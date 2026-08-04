@@ -195,8 +195,10 @@ async function handleMessage(from, msgText) {
 app.post('/google-chat', async (req, res) => {
     try {
         const event = req.body;
+        console.log("➡️ RECEBIDO DO GOOGLE CHAT: ", event.type);
         
         if (event.type === 'ADDED_TO_SPACE') {
+            console.log("Log: Bot adicionado ao espaço");
             return res.json({ text: "Olá! Sou o assistente de Suporte Interno IPNET. Envie 'oi' para começarmos." });
         }
 
