@@ -195,7 +195,8 @@ async function handleMessage(from, msgText) {
 app.post('/google-chat', async (req, res) => {
     try {
         const event = req.body;
-        console.log("➡️ RECEBIDO DO GOOGLE CHAT: ", event.type);
+        console.log("➡️ RECEBIDO BODY COMPLETO: ", JSON.stringify(req.body));
+        console.log("➡️ HEADERS: ", JSON.stringify(req.headers));
         
         if (event.type === 'ADDED_TO_SPACE') {
             console.log("Log: Bot adicionado ao espaço");
