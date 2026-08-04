@@ -187,6 +187,13 @@ async function handleMessage(from, msgText) {
         return { text: responseText, logData };
     }
 
+    // Se estiver no viewing_leaf (após ver uma resposta), permite navegar como se fosse o menu_principal
+    if (state === 'viewing_leaf') {
+        setSession(from, { state: 'menu_principal' });
+        // Reprocessa a mensagem como se fosse do menu principal
+        return handleMessage(from, msgText);
+    }
+
     setSession(from, { state: 'menu_principal' });
     logData = { categoria: 'Erro de Navegação', subcategoria: 'Fallback', problema: '-' };
     return { text: knowledge.menuPrincipal, logData };
