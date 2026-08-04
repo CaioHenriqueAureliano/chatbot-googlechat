@@ -11,16 +11,16 @@ app.use(express.json());
 // ═══════════════════════════════════════════════════
 const sessions = new Map();
 
-function getSession(email) {
-    if (!sessions.has(email)) {
-        sessions.set(email, { email, state: 'inicio' });
+function getSession(from) {
+    if (!sessions.has(from)) {
+        sessions.set(from, { from, email: null, state: 'inicio' });
     }
-    return sessions.get(email);
+    return sessions.get(from);
 }
 
-function setSession(email, data) {
-    const session = getSession(email);
-    sessions.set(email, { ...session, ...data });
+function setSession(from, data) {
+    const session = getSession(from);
+    sessions.set(from, { ...session, ...data });
 }
 
 // ═══════════════════════════════════════════════════
@@ -114,7 +114,34 @@ async function handleMessage(from, msgText) {
     const triggerMenu = ['oi', 'olá', 'ola', 'bom dia', 'boa tarde', 'boa noite',
                          'menu', 'inicio', 'início', 'start', 'ajuda', 'suporte'];
 
-    if (state === 'inicio' || triggerMenu.includes(msgText)) {
+    // ── ETAPA 1: COLETAR E-MAIL (Se não houver) ───────
+    if (state === 'inicio' || (triggerMenu.includes(msgText) && !session.email)) {
+        setSession(from, { state: 'aguardando_email' });
+        return {
+            text: knowledge.pedirEmail,
+            logData: { categoria: 'Onboarding', subcategoria: 'Coleta de E-mail', problema: '-' }
+        };
+    }
+
+    // ── ETAPA 2: VALIDAR E-MAIL ───────────────────────
+    if (state === 'aguardando_email') {
+        const isEmailValid = /^[^\s@]+@ipnet\.cloud$/i.test(msgText);
+        if (isEmailValid) {
+            setSession(from, { email: msgText, state: 'menu_principal' });
+            return {
+                text: `${knowledge.emailConfirmado.replace('{email}', msgText)}\n\n${knowledge.menuPrincipal}`,
+                logData: { categoria: 'Onboarding', subcategoria: 'E-mail Válido', problema: '-' }
+            };
+        } else {
+            return {
+                text: knowledge.emailInvalido,
+                logData: { categoria: 'Onboarding', subcategoria: 'E-mail Inválido', problema: '-' }
+            };
+        }
+    }
+
+    // Se o usuário tentar voltar pro menu principal mas JÁ tem email
+    if (triggerMenu.includes(msgText)) {
         return goToMenu(from, 'menu_principal');
     }
 
@@ -252,8 +279,8 @@ async function handleMessage(from, msgText) {
         // Qualquer texto diferente de '0' é a descrição do problema
         let ticketId = null;
         try {
-            ticketId = await openFreshserviceTicket(from, session, msgText);
-            console.log(`✅ Chamado #${ticketId} criado no Freshservice`);
+            ticketId = await openFreshserviceTicket(session.email, session, msgText);
+            console.log(`✅ Chamado #${ticketId} criado no Freshservice para ${session.email}`);
         } catch (e) {
             console.error('❌ Erro ao criar ticket:', e.response?.data || e.message);
         }
@@ -329,8 +356,9 @@ app.post('/google-chat', async (req, res) => {
             const result = await handleMessage(from, msgText);
 
             // Loga apenas interações relevantes (não navegação pura)
-            if (result.logData && result.logData.categoria !== 'Navegação' && result.logData.categoria !== 'Erro') {
-                logInteraction(from, msgText, result.logData);
+            if (result.logData && result.logData.categoria !== 'Navegação' && result.logData.categoria !== 'Erro' && result.logData.categoria !== 'Onboarding') {
+                const finalEmail = getSession(from).email || from;
+                logInteraction(finalEmail, msgText, result.logData);
             }
 
             return res.json(buildResponse(result.text || 'Desculpe, ocorreu um erro.'));
