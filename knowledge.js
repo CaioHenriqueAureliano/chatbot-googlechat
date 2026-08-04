@@ -43,9 +43,7 @@ Vamos reiniciar o processo.`,
 
 A nossa equipe técnica entrará em contato em breve e você receberá as atualizações por e-mail.
 
-👉 Digite *0* para voltar ao menu anterior.
-👉 Digite *menu* para voltar ao Menu Principal.
-👉 Digite *9* para Encerrar o atendimento.`,
+👉 Digite *menu* para voltar ao Menu Principal.`,
 
     encerramento: `Atendimento encerrado! Quando precisar de algo, é só mandar um oi. 👋`,
 
