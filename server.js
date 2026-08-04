@@ -346,6 +346,7 @@ async function handleMessage(from, msgText) {
         };
     }
 
+
     // ── AGUARDANDO DESCRIÇÃO DO CHAMADO ──────────────
     if (state === 'aguardando_detalhes_chamado') {
         if (msgText === '0') {
@@ -436,8 +437,8 @@ app.post('/google-chat', async (req, res) => {
 
             const result = await handleMessage(from, msgText);
 
-            // Loga apenas interações relevantes (não navegação pura)
-            if (result.logData && result.logData.categoria !== 'Navegação' && result.logData.categoria !== 'Erro' && result.logData.categoria !== 'Onboarding') {
+            // Loga todas as interações relevantes (exceto navegação pura e erros)
+            if (result.logData && result.logData.categoria !== 'Navegação' && result.logData.categoria !== 'Erro') {
                 const finalEmail = getSession(from).email || from;
                 logInteraction(finalEmail, msgText, result.logData);
             }

@@ -23,18 +23,12 @@ Por favor, digite seu *e-mail corporativo* no formato correto.
 _(Ex: nome@ipnet.cloud)_`,
 
     // ── VALIDAÇÃO DE PIN ─────────────────────────────────────
-    pinEnviado: `✉️ Enviamos um PIN de segurança de 4 dígitos para o seu e-mail (*{email}*).
-
-Por favor, digite o PIN aqui para continuar o atendimento:`,
-
-    pinInvalido: `❌ *PIN Inválido!*
-Verifique o código recebido no seu e-mail e tente novamente.`,
-
-    pinExpirado: `⏱️ O PIN expirou ou não foi gerado.
-Vamos reiniciar o processo.`,
+    // (Funcionalidade reservada para versões futuras)
 
     // ── ABERTURA DE CHAMADO (FRESHDESK) ─────────────────────
-    pedirDescricaoChamado: `Entendido. Para que eu possa abrir um chamado para a equipe técnica, por favor, **digite uma breve descrição do problema**.`,
+    pedirDescricaoChamado: `Entendido! Para que eu possa abrir um chamado para a equipe técnica, por favor, *descreva brevemente o problema*.
+
+_(Digite *0* a qualquer momento para cancelar e voltar ao menu)_`,
 
     chamadoAbertoSucesso: `✅ Seu chamado foi aberto com sucesso! 
 
@@ -94,7 +88,7 @@ Tente os seguintes passos:
 3. Conecte a outro cabo ou tomada diferente
 4. Se mesmo assim não ligar, *o equipamento precisará de análise técnica.*
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_1_1_2: `💡 *Notebook com Lentidão / Travando*
 
@@ -107,7 +101,7 @@ Tente os seguintes passos:
 5. Aguarde 10 minutos após reiniciar antes de trabalhar
 
 ⚠️ Se persistir após reiniciar, nossa equipe pode fazer uma *análise remota*.
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_1_1_3: `💡 *Tela com defeito*
 
@@ -118,7 +112,7 @@ Se a tela apresenta listras, pontos ou está preta:
 3. *Não tente abrir ou pressionar a tela* para evitar piorar o defeito
 
 ⚠️ Esse tipo de problema geralmente exige troca do equipamento.
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_1_1_4: `💡 *Teclado ou Touchpad com problema*
 
@@ -131,7 +125,7 @@ Tente os seguintes passos:
 5. Dica: Verifique o atalho de bloqueio do touchpad (ex: Fn+F6 ou Fn+F7)
 
 ⚠️ Se o problema for físico (tecla quebrada, líquido), informe ao suporte.
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_1_1_5: `💡 *Problema de Rede (Wi-Fi / VPN)*
 
@@ -141,7 +135,7 @@ Tente os seguintes passos:
 4. Reinicie o notebook e tente novamente
 
 🔐 *Para problemas de acesso à VPN corporativa*, entre em contato com o suporte.
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_1_1_6: `💡 *Câmera / Webcam (Fundo preto, travando, Meet)*
 
@@ -152,7 +146,7 @@ Tente os seguintes passos:
 3. Em notebooks Acer com bug no Google Meet, desative a "Aceleração de Hardware" nas configurações do Google Chrome
 4. Reinicie o notebook e tente novamente
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     // ── MENU 1.2: FONE / HEADSET ────────────────────────────
     menu_1_2: `🎧 *Fone de Ouvido / Headset*
@@ -173,7 +167,7 @@ Qual é o problema?
 5. Tente em outra porta USB ou entrada P2
 6. Teste em outro computador para confirmar se o problema é no fone
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_1_2_2: `💡 *Microfone não funciona*
 
@@ -183,7 +177,7 @@ Qual é o problema?
 4. No Teams/Meet: verifique nas configurações do aplicativo se o microfone correto está selecionado
 5. Teste em outro computador
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_1_2_3: `⚠️ *Defeito físico no Fone*
 
@@ -193,7 +187,7 @@ Para solicitar a troca:
 1. Guarde o equipamento com defeito
 2. Nossa equipe irá registrar a ocorrência e verificar disponibilidade de reposição
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     // ── MENU 1.3: MOUSE / TECLADO ───────────────────────────
     menu_1_3: `🖱️ *Mouse / Teclado*
@@ -214,7 +208,7 @@ Qual é o problema?
 5. Para mouse sem fio: verifique as pilhas/bateria ou conexão Bluetooth
 6. Teste em outro computador
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_1_3_2: `💡 *Teclas do teclado não funcionam*
 
@@ -224,14 +218,14 @@ Qual é o problema?
 4. Para teclado sem fio: verifique as pilhas/bateria ou conexão Bluetooth
 5. Teste em outro computador
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_1_3_3: `⚠️ *Defeito físico no Mouse ou Teclado*
 
 Solicite a substituição pelo canal de suporte.
 Nossa equipe irá verificar a disponibilidade do equipamento em estoque.
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     // ── MENU 1.4: MONITOR ───────────────────────────────────
     menu_1_4: `🖥️ *Monitor*
@@ -250,7 +244,7 @@ Qual é o problema?
 2. Teste com outro cabo
 3. Reinicie o computador
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_1_4_2: `💡 *Imagem com defeito*
 
@@ -261,7 +255,7 @@ Se há listras, cores erradas ou pixelamento:
 3. Ajuste a resolução: Configurações → Vídeo → Resolução recomendada
 
 ⚠️ Se o problema persistir com outro computador, o monitor tem defeito de hardware.
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_1_4_3: `💡 *Monitor não reconhecido*
 
@@ -270,21 +264,21 @@ Se há listras, cores erradas ou pixelamento:
 3. Reinicie com o monitor já conectado
 4. Verifique se o driver de vídeo está atualizado
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_1_4_4: `⚠️ *Defeito físico no Monitor*
 
 Monitores com tela quebrada ou danos físicos precisam de avaliação presencial.
 Registre a ocorrência com nossa equipe para iniciar o processo de troca.
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     // ── MENU 1.5: OUTROS ────────────────────────────────────
     resp_1_5: `🔌 *Outros Periféricos*
 
 Para outros periféricos (hub USB, suporte, cabo, webcam, etc.), você pode solicitar diretamente ao nosso time.
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     // ── MENU APPLE (MacBook) ────────────────────────────────
     menu_apple: `🍎 *Suporte Apple (MacBook)*
@@ -298,9 +292,9 @@ Qual destas opções descreve melhor o seu problema?
 *0.* ← Voltar ao menu anterior
 *menu* ← Voltar ao Menu Principal`,
 
-    resp_apple_1: `🍎 *MacBook não liga*\n\n1. Verifique se o carregador está bem conectado e se há luz indicativa.\n2. Segure o botão de energia por 10 segundos e solte.\n\nSe não resolver, *o equipamento precisará de análise técnica.*\n\n👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
-    resp_apple_2: `🍎 *Lentidão ou Travamento*\n\n1. Verifique se o macOS está atualizado.\n2. Feche aplicativos pesados em segundo plano.\n\nSe continuar travando, *será necessária análise técnica.*\n\n👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
-    resp_apple_3: `🍎 *Outros problemas (Apple)*\n\nNossa equipe técnica analisará seu caso.\n\n👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+    resp_apple_1: `🍎 *MacBook não liga*\n\n1. Verifique se o carregador está bem conectado e se há luz indicativa.\n2. Segure o botão de energia por 10 segundos e solte.\n\nSe não resolver, *o equipamento precisará de análise técnica.*\n\n👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
+    resp_apple_2: `🍎 *Lentidão ou Travamento*\n\n1. Verifique se o macOS está atualizado.\n2. Feche aplicativos pesados em segundo plano.\n\nSe continuar travando, *será necessária análise técnica.*\n\n👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
+    resp_apple_3: `🍎 *Outros problemas (Apple)*\n\nNossa equipe técnica analisará seu caso.\n\n👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     // ── MENU 2: PATRIMÔNIO ──────────────────────────────────
     menu_2: `📋 *Devoluções*
@@ -350,7 +344,7 @@ Para solicitar um novo equipamento (notebook, headset, mouse, etc.):
 2. Com a aprovação, nós abriremos a solicitação
 3. Informaremos a disponibilidade em estoque e o prazo estimado
 
-👉 Digite *9* para abrir a solicitação no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir a solicitação no Freshservice, ou *0* para voltar.`,
 
     resp_3_2: `📦 *Troca de Equipamento com Defeito*
 
@@ -360,7 +354,7 @@ Para solicitar a troca por defeito:
 2. Se confirmado o defeito, verificaremos estoque para reposição
 3. Em alguns casos, o equipamento pode ser enviado para conserto
 
-👉 Digite *9* para abrir a solicitação no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir a solicitação no Freshservice, ou *0* para voltar.`,
 
     resp_3_3: `📦 *Solicitação de Acessório*
 
@@ -369,7 +363,7 @@ Para solicitar acessórios (suporte de notebook, hub USB, cabo HDMI, etc.):
 1. Verificaremos disponibilidade em estoque
 2. Acessórios são sujeitos à aprovação conforme política interna
 
-👉 Digite *9* para abrir a solicitação no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir a solicitação no Freshservice, ou *0* para voltar.`,
 
     // ── MENU 5: ACESSOS, SENHAS E E-MAILS ───────────────────
     menu_5: `🔐 *Acessos, Senhas e E-mails*
@@ -387,13 +381,13 @@ Selecione a opção desejada:
 
 Para redefinir ou trocar sua senha, precisamos abrir um chamado com os detalhes (qual sistema/plataforma você está tentando acessar).
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_5_2: `📧 *Alteração em Grupos de E-mail*
 
 Para solicitar inclusão, remoção ou alteração em grupos de e-mail, precisamos registrar a solicitação formalmente.
 
-👉 Digite *9* para abrir um chamado no Freshdesk, ou *0* para voltar.`,
+👉 Digite *9* para abrir um chamado no Freshservice, ou *0* para voltar.`,
 
     resp_5_3: `⚙️ *Outros Problemas de Acesso*
 
@@ -403,17 +397,12 @@ Para outros problemas relacionados a acessos, senhas ou e-mails, a equipe técni
 
 
 
-    // ── OPÇÃO 5: ABRIR TICKET ───────────────────────────────
-    resp_atendente: `🎫 *Abrir Ticket de Suporte*
+    // ── HORÁRIO E CONTATO (mensagem de fallback de erro de ticket) ───
+    resp_atendente: `⚠️ Não foi possível abrir o chamado automaticamente.
 
-Entendido! Vou registrar sua solicitação agora. 🙂
-
-Um membro da equipe de *Suporte Interno da IPNET by VIVO* receberá seu ticket e entrará em contato em breve.
-
-⏱️ *Horário de atendimento:* Segunda a Sexta, 08h às 18h.
-
-Se for urgente, você também pode entrar em contato por:
-📧 suporte@ipnet.cloud`,
+Por favor, entre em contato diretamente com o suporte:
+📧 suporte@ipnet.cloud
+⏱️ *Horário de atendimento:* Segunda a Sexta, 08h às 18h.`,
 
     // ── RESPOSTAS GENÉRICAS ─────────────────────────────────
     naoEntendeu: `Não entendi sua mensagem. 😅
