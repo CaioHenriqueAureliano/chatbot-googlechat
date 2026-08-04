@@ -326,6 +326,13 @@ async function handleMessage(from, msgText) {
 }
 
 // ═══════════════════════════════════════════════════
+//  ROTA PARA O UPTIMEROBOT (KEEP-ALIVE)
+// ═══════════════════════════════════════════════════
+app.get('/', (req, res) => {
+    res.send('Servidor do Chatbot IPNET rodando perfeitamente!');
+});
+
+// ═══════════════════════════════════════════════════
 //  ROTA PRINCIPAL — GOOGLE CHAT (WORKSPACE ADD-ON)
 // ═══════════════════════════════════════════════════
 app.post('/google-chat', async (req, res) => {
