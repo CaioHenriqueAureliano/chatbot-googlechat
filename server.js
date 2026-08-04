@@ -214,12 +214,25 @@ app.post('/google-chat', async (req, res) => {
             type = 'ADDED_TO_SPACE';
         }
 
+        const buildResponse = (textResponse) => {
+            return {
+                text: textResponse,
+                actionResponse: { type: 'NEW_MESSAGE' },
+                hostAppDataAction: {
+                    chatDataAction: {
+                        createMessageAction: {
+                            message: {
+                                text: textResponse
+                            }
+                        }
+                    }
+                }
+            };
+        };
+
         if (type === 'ADDED_TO_SPACE') {
             console.log("Log: Bot adicionado ao espaço");
-            return res.json({
-                actionResponse: { type: 'NEW_MESSAGE' },
-                text: "Olá! Sou o assistente de Suporte Interno IPNET. Envie 'oi' para começarmos."
-            });
+            return res.json(buildResponse("Olá! Sou o assistente de Suporte Interno IPNET. Envie 'oi' para começarmos."));
         }
 
         if (type === 'MESSAGE') {
@@ -240,24 +253,15 @@ app.post('/google-chat', async (req, res) => {
                 logInteraction(from, msgText, result.logData);
             }
 
-            return res.json({
-                actionResponse: { type: 'NEW_MESSAGE' },
-                text: result.text || "Desculpe, não entendi."
-            });
+            return res.json(buildResponse(result.text || "Desculpe, não entendi."));
         }
 
         // Se for qualquer outro evento não mapeado
-        return res.json({
-            actionResponse: { type: 'NEW_MESSAGE' },
-            text: "Evento recebido."
-        });
+        return res.json(buildResponse("Evento recebido."));
         
     } catch (error) {
         console.error("Erro interno no webhook:", error);
-        return res.json({
-            actionResponse: { type: 'NEW_MESSAGE' },
-            text: "Ocorreu um erro interno. Tente novamente."
-        });
+        return res.json({ text: "Ocorreu um erro interno. Tente novamente." });
     }
 });
 
