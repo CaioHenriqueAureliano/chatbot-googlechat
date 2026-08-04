@@ -91,7 +91,8 @@ async function logInteraction(email, msgText, logData) {
             recebido: msgText,
             categoria: logData.categoria,
             subcategoria: logData.subcategoria,
-            problema: logData.problema
+            problema: logData.problema,
+            ticketId: logData.ticketId || ""
         });
         console.log(`Log salvo: [${logData.categoria}]`);
     } catch (error) {
@@ -369,7 +370,12 @@ async function handleMessage(from, msgText) {
         if (ticketId) {
             return {
                 text: knowledge.chamadoAbertoSucesso.replace(/{ticketId}/g, ticketId),
-                logData: { categoria: 'Ticket', subcategoria: 'Abrir Chamado', problema: `#${ticketId}` }
+                logData: { 
+                    categoria: 'Ticket', 
+                    subcategoria: 'Abrir Chamado', 
+                    problema: session.lastLogData ? session.lastLogData.problema : 'Abertura Direta',
+                    ticketId: `#${ticketId}`
+                }
             };
         } else {
             return {
