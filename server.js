@@ -195,19 +195,33 @@ async function handleMessage(from, msgText) {
 app.post('/google-chat', async (req, res) => {
     try {
         const event = req.body;
-        console.log("➡️ RECEBIDO BODY COMPLETO: ", JSON.stringify(req.body));
-        console.log("➡️ HEADERS: ", JSON.stringify(req.headers));
         
-        if (event.type === 'ADDED_TO_SPACE') {
+        let type = event.type;
+        let from = 'anonimo@ipnet.cloud';
+        let msgText = 'oi';
+
+        // Verifica se é o formato novo (Google Workspace Add-ons)
+        if (event.chat && event.chat.messagePayload && event.chat.messagePayload.message) {
+            type = 'MESSAGE';
+            from = event.chat.user?.email || from;
+            msgText = event.chat.messagePayload.message.text || msgText;
+        } else if (event.type === 'MESSAGE') {
+            // Formato clássico
+            from = event.user?.email || from;
+            msgText = event.message?.text || msgText;
+        } else if (event.chat && !event.chat.messagePayload) {
+            // Pode ser ADDED_TO_SPACE no formato novo
+            type = 'ADDED_TO_SPACE';
+        }
+
+        if (type === 'ADDED_TO_SPACE') {
             console.log("Log: Bot adicionado ao espaço");
             return res.json({ text: "Olá! Sou o assistente de Suporte Interno IPNET. Envie 'oi' para começarmos." });
         }
 
-        if (event.type === 'MESSAGE') {
-            const from = (event.user && event.user.email) ? event.user.email : 'anonimo@ipnet.cloud';
-            const msgText = (event.message && event.message.text) ? event.message.text.trim().toLowerCase() : 'oi';
-
-            console.log(`📩 Nova mensagem de : ${from}`);
+        if (type === 'MESSAGE') {
+            msgText = msgText.trim().toLowerCase();
+            console.log(`📩 Nova mensagem de : ${from} - Texto: ${msgText}`);
 
             const result = await handleMessage(from, msgText);
             
