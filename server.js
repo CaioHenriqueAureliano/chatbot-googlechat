@@ -210,6 +210,16 @@ async function handleMessage(from, msgText) {
         return goToMenu(from, 'menu_principal');
     }
 
+    // ── GATILHO GLOBAL: Encerramento / Agradecimento ───
+    const triggerEncerramento = ['encerrar', 'fim', 'tchau', 'obrigado', 'obrigada', 'valeu', 'vlw', 'fechar', 'cancelar'];
+    if (triggerEncerramento.includes(msgText)) {
+        setSession(from, { state: 'menu_principal' });
+        return {
+            text: knowledge.agradecimentoEncerramento,
+            logData: { categoria: 'Navegação', subcategoria: 'Encerramento', problema: '-' }
+        };
+    }
+
     // ── MENU PRINCIPAL ──────────────────────────────
     if (state === 'menu_principal') {
         switch (msgText) {
