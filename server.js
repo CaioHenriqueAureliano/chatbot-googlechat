@@ -51,27 +51,31 @@ async function openFreshserviceTicket(email, session, descricaoUsuario) {
     const logData = session.lastLogData || {};
     const description = descricaoUsuario || `Chamado aberto via Chatbot Google Chat.<br><b>Problema:</b> ${logData.problema || '-'}`;
 
-    const response = await axios.post(
-        `https://ipnetcloud.freshservice.com/api/v2/tickets`,
-        {
-            description,
-            subject: `[Chatbot GChat] ${logData.subcategoria || 'Suporte Interno IPNET'}`,
-            email,
-            priority: 1,
-            status: 2,
-            source: 3,
-            workspace_id: 2,
-            department_id: 17000222357,
-            group_id: 17000371025,
-            category: 'Suporte Interno',
-            custom_fields: {
-                classificao_g: 'Requisição',
-                utilizou_ia_para_a_resoluo_desse_ticket: 'Não'
-            }
-        },
-        { headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' } }
-    );
-    return response.data.ticket?.id || response.data.id;
+    try {
+        const response = await axios.post(
+            `https://ipnetcloud.freshservice.com/api/v2/tickets`,
+            {
+                description,
+                subject: `[Chatbot GChat] ${logData.subcategoria || 'Suporte Interno IPNET'}`,
+                email,
+                priority: 1,
+                status: 2,
+                source: 3,
+                workspace_id: 2,
+                department_id: 17000222357,
+                group_id: 17000371025,
+                category: 'Suporte Interno',
+                custom_fields: {
+                    classificao_g: 'Requisição',
+                    utilizou_ia_para_a_resoluo_desse_ticket: 'Não'
+                }
+            },
+            { headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' } }
+        );
+        return { ticketId: response.data.ticket?.id || response.data.id, error: null };
+    } catch (e) {
+        return { ticketId: null, error: e.response?.data ? JSON.stringify(e.response.data) : e.message };
+    }
 }
 
 // ═══════════════════════════════════════════════════
@@ -278,11 +282,16 @@ async function handleMessage(from, msgText) {
         }
         // Qualquer texto diferente de '0' é a descrição do problema
         let ticketId = null;
+        let errorMsg = null;
         try {
-            ticketId = await openFreshserviceTicket(session.email, session, msgText);
-            console.log(`✅ Chamado #${ticketId} criado no Freshservice para ${session.email}`);
+            const result = await openFreshserviceTicket(session.email, session, msgText);
+            ticketId = result.ticketId;
+            errorMsg = result.error;
+            if (ticketId) console.log(`✅ Chamado #${ticketId} criado no Freshservice para ${session.email}`);
+            else console.error('❌ Erro ao criar ticket:', errorMsg);
         } catch (e) {
-            console.error('❌ Erro ao criar ticket:', e.response?.data || e.message);
+            console.error('❌ Erro inesperado ao criar ticket:', e.message);
+            errorMsg = e.message;
         }
         setSession(from, { state: 'menu_principal' });
         if (ticketId) {
@@ -292,7 +301,7 @@ async function handleMessage(from, msgText) {
             };
         } else {
             return {
-                text: `${knowledge.resp_atendente}\n\n_(Não foi possível abrir o ticket automaticamente. Nossa equipe receberá sua solicitação em breve.)_`,
+                text: `${knowledge.resp_atendente}\n\n_(Não foi possível abrir o ticket automaticamente. Erro: ${errorMsg})_`,
                 logData: { categoria: 'Ticket', subcategoria: 'Abrir Chamado', problema: 'Erro API' }
             };
         }
