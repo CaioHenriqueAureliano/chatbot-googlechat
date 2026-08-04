@@ -46,31 +46,32 @@ async function logInteraction(email, msgText, logData) {
 // ═══════════════════════════════════════════════════
 //  ABRIR TICKET NO FRESHSERVICE
 // ═══════════════════════════════════════════════════
-async function openFreshserviceTicket(email, session) {
-    try {
-        const logData = session.lastLogData || {};
-        const description = `Chamado aberto via Chatbot Google Chat.<br>
-            <b>Categoria:</b> ${logData.categoria || '-'}<br>
-            <b>Subcategoria:</b> ${logData.subcategoria || '-'}<br>
-            <b>Problema:</b> ${logData.problema || '-'}`;
+async function openFreshserviceTicket(email, session, descricaoUsuario) {
+    const authHeader = 'Basic ' + Buffer.from(process.env.FRESHSERVICE_API_KEY + ':X').toString('base64');
+    const logData = session.lastLogData || {};
+    const description = descricaoUsuario || `Chamado aberto via Chatbot Google Chat.<br><b>Problema:</b> ${logData.problema || '-'}`;
 
-        const response = await axios.post(
-            `${process.env.FRESHDESK_DOMAIN}/api/v2/tickets`,
-            {
-                email,
-                subject: `[Chatbot] ${logData.subcategoria || 'Suporte Interno IPNET'}`,
-                description,
-                status: 2,   // open
-                priority: 2, // medium
-                source: 2    // portal
-            },
-            { auth: { username: process.env.FRESHSERVICE_API_KEY, password: 'X' } }
-        );
-        return response.data.ticket?.id || response.data.id;
-    } catch (error) {
-        console.error('Erro ao abrir ticket Freshservice:', error.message);
-        return null;
-    }
+    const response = await axios.post(
+        `https://ipnetcloud.freshservice.com/api/v2/tickets`,
+        {
+            description,
+            subject: `[Chatbot GChat] ${logData.subcategoria || 'Suporte Interno IPNET'}`,
+            email,
+            priority: 1,
+            status: 2,
+            source: 3,
+            workspace_id: 2,
+            department_id: 17000222357,
+            group_id: 17000371025,
+            category: 'Suporte Interno',
+            custom_fields: {
+                classificao_g: 'Requisição',
+                utilizou_ia_para_a_resoluo_desse_ticket: 'Não'
+            }
+        },
+        { headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' } }
+    );
+    return response.data.ticket?.id || response.data.id;
 }
 
 // ═══════════════════════════════════════════════════
@@ -234,28 +235,47 @@ async function handleMessage(from, msgText) {
         }
     }
 
+    // ── GATILHO GLOBAL: Opção 9 abre chamado ─────────
+    if (msgText === '9' && state !== 'aguardando_detalhes_chamado') {
+        setSession(from, { state: 'aguardando_detalhes_chamado' });
+        return {
+            text: knowledge.pedirDescricaoChamado,
+            logData: { categoria: 'Navegação', subcategoria: 'Abertura de Chamado', problema: 'Iniciada' }
+        };
+    }
+
+    // ── AGUARDANDO DESCRIÇÃO DO CHAMADO ──────────────
+    if (state === 'aguardando_detalhes_chamado') {
+        if (msgText === '0') {
+            return goToMenu(from, 'menu_principal');
+        }
+        // Qualquer texto diferente de '0' é a descrição do problema
+        let ticketId = null;
+        try {
+            ticketId = await openFreshserviceTicket(from, session, msgText);
+            console.log(`✅ Chamado #${ticketId} criado no Freshservice`);
+        } catch (e) {
+            console.error('❌ Erro ao criar ticket:', e.response?.data || e.message);
+        }
+        setSession(from, { state: 'menu_principal' });
+        if (ticketId) {
+            return {
+                text: knowledge.chamadoAbertoSucesso.replace(/{ticketId}/g, ticketId),
+                logData: { categoria: 'Ticket', subcategoria: 'Abrir Chamado', problema: `#${ticketId}` }
+            };
+        } else {
+            return {
+                text: `${knowledge.resp_atendente}\n\n_(Não foi possível abrir o ticket automaticamente. Nossa equipe receberá sua solicitação em breve.)_`,
+                logData: { categoria: 'Ticket', subcategoria: 'Abrir Chamado', problema: 'Erro API' }
+            };
+        }
+    }
+
     // ── VIEWING LEAF: resposta final exibida ─────────
     if (state === 'viewing_leaf') {
         const prevState = session.previous_state || 'menu_principal';
         if (msgText === '0') {
             return goToMenu(from, prevState);
-        }
-        if (msgText === '9') {
-            const ticketId = await openFreshserviceTicket(from, session);
-            setSession(from, { state: 'menu_principal' });
-            if (ticketId) {
-                return {
-                    text: knowledge.chamadoAbertoSucesso
-                        .replace('{ticketId}', ticketId)
-                        .replace('{ticketId}', ticketId),
-                    logData: { categoria: 'Ticket', subcategoria: 'Abrir Chamado', problema: `#${ticketId}` }
-                };
-            } else {
-                return {
-                    text: `${knowledge.resp_atendente}\n\n_(Não foi possível abrir o ticket automaticamente. Nossa equipe receberá sua solicitação.)_`,
-                    logData: { categoria: 'Ticket', subcategoria: 'Abrir Chamado', problema: 'Erro API' }
-                };
-            }
         }
         return { text: knowledge.naoEntendeu, logData: { categoria: 'Erro', subcategoria: 'Opção Inválida', problema: '-' } };
     }
