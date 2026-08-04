@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Painel de controle do Chatbot de Suporte IPNET by VIVO">
+    <title>Painel de Suporte | IPNET by VIVO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Overlay para fechar o menu no mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo-area">
+                <!-- Logo modo escuro (branca) -->
+                <img src="Logo IPNET branca reduzida (1).png"
+                     alt="IPNET by VIVO"
+                     class="brand-logo logo-dark"
+                     onerror="this.style.display='none'; document.getElementById('fallbackText').style.display='block';">
+                <!-- Logo modo claro (cor positiva) -->
+                <img src="Logo IPNET Cor positivo.png"
+                     alt="IPNET by VIVO"
+                     class="brand-logo logo-light">
+                <span id="fallbackText" class="fallback-brand">IPNET by VIVO</span>
+            </div>
+
+            <nav class="menu" role="navigation" aria-label="Menu principal">
+                <a href="#" class="menu-item active" id="nav-dashboard" data-target="page-dashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" id="nav-atendimentos" data-target="page-atendimentos">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>Atendimentos</span>
+                </a>
+                <a href="#" class="menu-item" id="nav-patrimonio" data-target="page-patrimonio">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                    <span>Patrimônio</span>
+                </a>
+                <a href="#" class="menu-item" id="nav-config" data-target="page-config">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <span class="version-tag">Chatbot Suporte v1.0</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menu" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="page-title" style="margin-bottom: 2px;">Dashboard de Suporte TI</h1>
+                        <p class="subtitle" style="font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">Gestão de Atendimentos, Chatbot e Inventário de Patrimônio</p>
+                        <p class="subtitle" id="lastUpdated" style="font-size: 11px;">Carregando dados...</p>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="status-indicator" id="connectionStatus">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Conectado</span>
+                    </div>
+                    <button class="theme-toggle-btn" id="themeToggle" aria-label="Alternar tema">
+                        <!-- Ícone sol (modo claro) -->
+                        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <!-- Ícone lua (modo escuro) -->
+                        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                    <div class="avatar" aria-label="Administrador">ADM</div>
+                </div>
+            </header>
+
+            <!-- Páginas / Seções -->
+            <div class="pages-container">
+                
+                <!-- PÁGINA: DASHBOARD -->
+                <div id="page-dashboard" class="page-section active">
+                    <!-- Metrics Cards -->
+                    <section class="metrics-grid" aria-label="Métricas principais">
+
+                <div class="metric-card glass" id="card-total">
+                    <div class="metric-header">
+                        <span class="metric-title">Total de Atendimentos</span>
+                        <div class="metric-icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="metric-value" id="totalAtendimentos">—</div>
+                    <div class="metric-trend neutral" id="trendTotal">Aguardando dados</div>
+                </div>
+
+                <div class="metric-card glass" id="card-tickets">
+                    <div class="metric-header">
+                        <span class="metric-title">Tickets Abertos</span>
+                        <div class="metric-icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="metric-value" id="totalTickets">—</div>
+                    <div class="metric-trend neutral" id="trendTickets">Aguardando dados</div>
+                </div>
+
+                <div class="metric-card glass" id="card-resolucao">
+                    <div class="metric-header">
+                        <span class="metric-title">Resolvidos pelo Bot</span>
+                        <div class="metric-icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="metric-value" id="taxaResolucao">—</div>
+                    <div class="metric-trend neutral" id="trendResolucao">Aguardando dados</div>
+                </div>
+
+                <div class="metric-card glass" id="card-usuarios">
+                    <div class="metric-header">
+                        <span class="metric-title">Usuários Únicos</span>
+                        <div class="metric-icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="metric-value" id="usuariosUnicos">—</div>
+                    <div class="metric-trend neutral" id="trendUsuarios">Aguardando dados</div>
+                </div>
+
+            </section>
+
+            <!-- Charts -->
+            <section class="charts-grid" aria-label="Gráficos de análise">
+                <div class="chart-card glass">
+                    <div class="chart-card-header">
+                        <h2 class="chart-title">Volume de Interações</h2>
+                        <span class="chart-subtitle">Últimos 7 dias</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="volumeChart" aria-label="Gráfico de volume de mensagens"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card glass">
+                    <div class="chart-card-header">
+                        <h2 class="chart-title">Por Categoria</h2>
+                        <span class="chart-subtitle">Distribuição geral</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="deptChart" aria-label="Gráfico de distribuição por departamento"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabela -->
+            <section class="table-section glass" aria-label="Atendimentos recentes">
+                <div class="table-section-header">
+                    <h2 class="chart-title">Atendimentos Recentes</h2>
+                    <span class="chart-subtitle" id="tableCount">—</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Usuário / Telefone</th>
+                                <th scope="col">Categoria</th>
+                                <th scope="col">Assunto</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Data / Hora</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityTableBody">
+                            <tr>
+                                <td colspan="5" class="table-loading">Carregando dados da planilha...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+                </div> <!-- Fim page-dashboard -->
+
+                <!-- PÁGINA: ATENDIMENTOS -->
+                <div id="page-atendimentos" class="page-section">
+                    <section class="table-section glass" aria-label="Todos os Atendimentos">
+                        <div class="table-section-header">
+                            <div>
+                                <h2 class="chart-title">Tickets / Atendimentos</h2>
+                                <span class="chart-subtitle">Histórico completo de chamados</span>
+                            </div>
+                            <div class="filters-area">
+                                <select class="filter-select" aria-label="Filtrar por origem">
+                                    <option value="">Todas as origens</option>
+                                    <option value="whatsapp">WhatsApp</option>
+                                    <option value="gchat">Google Chat</option>
+                                </select>
+                                <select class="filter-select" aria-label="Filtrar por status">
+                                    <option value="">Todos os status</option>
+                                    <option value="aberto">Aberto</option>
+                                    <option value="resolvido">Resolvido</option>
+                                </select>
+                                <input type="text" class="filter-input" placeholder="Buscar por nome ou ID..." aria-label="Buscar tickets">
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID Ticket</th>
+                                        <th scope="col">Origem</th>
+                                        <th scope="col">Usuário / Contato</th>
+                                        <th scope="col">Assunto / Problema</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Data</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fullTicketsTableBody">
+                                    <!-- Dados virão do JS -->
+                                    <tr>
+                                        <td colspan="6" class="table-loading">Aguardando dados...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- PÁGINA: PATRIMÔNIO -->
+                <div id="page-patrimonio" class="page-section">
+                    
+                    <!-- KPIs Patrimônio -->
+                    <section class="metrics-grid" aria-label="Métricas de Patrimônio">
+                        <div class="metric-card glass">
+                            <div class="metric-header">
+                                <span class="metric-title">Total de Equipamentos</span>
+                                <div class="metric-icon-wrap">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="metric-value" id="patrimonioTotal">—</div>
+                        </div>
+                        <div class="metric-card glass">
+                            <div class="metric-header">
+                                <span class="metric-title">Em Uso</span>
+                                <div class="metric-icon-wrap">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="metric-value" id="patrimonioUso">—</div>
+                        </div>
+                        <div class="metric-card glass">
+                            <div class="metric-header">
+                                <span class="metric-title">Em Estoque</span>
+                                <div class="metric-icon-wrap">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="22" y1="12" x2="2" y2="12"></line>
+                                        <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                                        <line x1="6" y1="16" x2="6.01" y2="16"></line>
+                                        <line x1="10" y1="16" x2="10.01" y2="16"></line>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="metric-value" id="patrimonioEstoque">—</div>
+                        </div>
+                        <div class="metric-card glass">
+                            <div class="metric-header">
+                                <span class="metric-title">Em Manutenção</span>
+                                <div class="metric-icon-wrap">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="metric-value" id="patrimonioManutencao">—</div>
+                        </div>
+                    </section>
+
+                    <!-- Charts Patrimônio -->
+                    <section class="charts-grid" aria-label="Gráficos de Patrimônio">
+                        <div class="chart-card glass">
+                            <div class="chart-card-header">
+                                <h2 class="chart-title">Distribuição por Status</h2>
+                                <span class="chart-subtitle">Visão geral do inventário</span>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="patrimonioStatusChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card glass">
+                            <div class="chart-card-header">
+                                <h2 class="chart-title">Top Modelos/Equipamentos</h2>
+                                <span class="chart-subtitle">Quantidade por tipo</span>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="patrimonioModelosChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="table-section glass" aria-label="Inventário de Patrimônio">
+                        <div class="table-section-header">
+                            <div>
+                                <h2 class="chart-title">Inventário de Patrimônio</h2>
+                                <span class="chart-subtitle">Gestão de equipamentos</span>
+                            </div>
+                            <div class="filters-area">
+                                <select class="filter-select" id="filterPatrimonioEquipamento" aria-label="Filtrar por equipamento">
+                                    <option value="">Todos os Equipamentos</option>
+                                    <!-- Options serão populadas via JS -->
+                                </select>
+                                <select class="filter-select" id="filterPatrimonioStatus" aria-label="Filtrar por status">
+                                    <option value="">Todos os Status</option>
+                                    <option value="uso">Em Uso</option>
+                                    <option value="estoque">Em Estoque</option>
+                                    <option value="manuten">Manutenção</option>
+                                </select>
+                                <input type="text" class="filter-input" id="filterPatrimonioSearch" placeholder="Buscar por Serial ou Usuário..." aria-label="Buscar patrimônio">
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Serial / TAG</th>
+                                        <th scope="col">Marca</th>
+                                        <th scope="col">Equipamento</th>
+                                        <th scope="col">Colaborador</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Atualização</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="patrimonioTableBody">
+                                    <!-- Dados virão do JS -->
+                                    <tr>
+                                        <td colspan="5" class="table-loading">Aguardando dados da planilha...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- PÁGINA: CONFIGURAÇÕES -->
+                <div id="page-config" class="page-section">
+                    <div class="config-grid">
+                        <section class="config-card glass">
+                            <div class="config-header">
+                                <div class="metric-icon-wrap">
+                                    <!-- Ícone Freshdesk (representação) -->
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="config-title">Integração Freshdesk</h3>
+                                    <p class="config-desc">Status da conexão com o sistema de tickets</p>
+                                </div>
+                            </div>
+                            <div class="config-body">
+                                <div class="status-indicator active-status">
+                                    <span class="status-dot"></span> Conectado
+                                </div>
+                                <div class="input-group">
+                                    <label>Domínio do Freshdesk</label>
+                                    <input type="text" class="form-input" value="suporte-ipnet.freshdesk.com" readonly>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="config-card glass">
+                            <div class="config-header">
+                                <div class="metric-icon-wrap">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="config-title">Integração WhatsApp</h3>
+                                    <p class="config-desc">API Oficial (Meta)</p>
+                                </div>
+                            </div>
+                            <div class="config-body">
+                                <div class="status-indicator active-status">
+                                    <span class="status-dot"></span> Ativo
+                                </div>
+                                <div class="input-group">
+                                    <label>Número do Bot</label>
+                                    <input type="text" class="form-input" value="+55 21 97467-4868" readonly>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="config-card glass">
+                            <div class="config-header">
+                                <div class="metric-icon-wrap">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="config-title">Integração Google Chat</h3>
+                                    <p class="config-desc">Chatbot interno no Workspace</p>
+                                </div>
+                            </div>
+                            <div class="config-body">
+                                <div class="status-indicator active-status">
+                                    <span class="status-dot"></span> Ativo
+                                </div>
+                                <div class="input-group">
+                                    <label>Webhook URL / ID</label>
+                                    <input type="text" class="form-input" value="https://chat.googleapis.com/..." readonly>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+            </div> <!-- Fim pages-container -->
+
+        </main>
+    </div>
+
+    <!-- Modal do Ticket -->
+    <div id="ticketModal" class="modal-overlay">
+        <div class="modal-content glass">
+            <div class="modal-header">
+                <div>
+                    <h2 class="modal-title" id="modalTicketId">#---</h2>
+                    <p class="modal-subtitle" id="modalTicketSubject">Carregando...</p>
+                </div>
+                <button class="modal-close-btn" id="closeTicketModalBtn" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="modal-body" id="modalTicketBody">
+                <div class="modal-loading">Buscando histórico no Freshservice...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

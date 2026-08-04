@@ -5,6 +5,62 @@ const knowledge = require('./knowledge');
 
 const app = express();
 app.use(express.json());
+app.use(express.static('public')); // Servir o dashboard
+
+// ═══════════════════════════════════════════════════
+//  ROTAS DO DASHBOARD E TICKETS (API)
+// ═══════════════════════════════════════════════════
+app.get('/api/dashboard', async (req, res) => {
+    try {
+        const response = await axios.get(process.env.APP_SCRIPT_URL);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Erro ao buscar dados do dashboard:', error.message);
+        res.status(500).json({ error: 'Erro ao buscar dados do Google Sheets' });
+    }
+});
+
+app.get('/api/tickets', async (req, res) => {
+    try {
+        const apiKey = process.env.FRESHSERVICE_API_KEY || process.env.FRESHDESK_API_KEY;
+        const authHeader = 'Basic ' + Buffer.from(apiKey + ':X').toString('base64');
+        const domain = 'https://ipnetcloud.freshservice.com';
+
+        const response = await axios.get(`${domain}/api/v2/tickets?per_page=30&order_by=created_at&order_type=desc`, {
+            headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' }
+        });
+        res.json({ status: 'ok', tickets: response.data });
+    } catch (error) {
+        console.error('Erro ao buscar tickets do Freshservice:', error.message);
+        res.status(500).json({ error: 'Erro ao buscar tickets' });
+    }
+});
+
+app.get('/api/tickets/:id', async (req, res) => {
+    try {
+        const ticketId = req.params.id;
+        const apiKey = process.env.FRESHSERVICE_API_KEY || process.env.FRESHDESK_API_KEY;
+        const authHeader = 'Basic ' + Buffer.from(apiKey + ':X').toString('base64');
+        const domain = 'https://ipnetcloud.freshservice.com';
+
+        const ticketResponse = await axios.get(`${domain}/api/v2/tickets/${ticketId}`, {
+            headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' }
+        });
+
+        const convResponse = await axios.get(`${domain}/api/v2/tickets/${ticketId}/conversations`, {
+            headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' }
+        });
+        
+        res.json({ 
+            status: 'ok', 
+            ticket: ticketResponse.data.ticket, 
+            conversations: convResponse.data.conversations 
+        });
+    } catch (error) {
+        console.error(`Erro ao buscar detalhes do ticket ${req.params.id}:`, error.message);
+        res.status(500).json({ error: 'Erro ao buscar detalhes do ticket' });
+    }
+});
 
 // ═══════════════════════════════════════════════════
 //  SESSÕES EM MEMÓRIA
@@ -325,12 +381,6 @@ async function handleMessage(from, msgText) {
     return goToMenu(from, 'menu_principal');
 }
 
-// ═══════════════════════════════════════════════════
-//  ROTA PARA O UPTIMEROBOT (KEEP-ALIVE)
-// ═══════════════════════════════════════════════════
-app.get('/', (req, res) => {
-    res.send('Servidor do Chatbot IPNET rodando perfeitamente!');
-});
 
 // ═══════════════════════════════════════════════════
 //  ROTA PRINCIPAL — GOOGLE CHAT (WORKSPACE ADD-ON)
