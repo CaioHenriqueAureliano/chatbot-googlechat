@@ -43,8 +43,8 @@ _(Digite *0* a qualquer momento para cancelar e voltar ao menu)_`,
 
     pedirEmailGestor: `Anotado! 📝 Você deseja colocar o seu gestor em cópia no chamado para fins de autorização?
 
-👉 Se **sim**, digite o *e-mail corporativo* dele (@ipnet.cloud).
-👉 Se **não**, digite *não* para prosseguirmos com a abertura.
+👉 Se *sim*, digite o *e-mail corporativo* dele (@ipnet.cloud).
+👉 Se *não*, digite *não* para prosseguirmos com a abertura.
 
 _(Digite *0* a qualquer momento para cancelar e voltar ao menu)_`,
 
