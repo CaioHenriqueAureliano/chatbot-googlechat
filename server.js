@@ -100,6 +100,15 @@ async function logInteraction(email, msgText, logData) {
     }
 }
 
+async function flushPendingLog(from) {
+    const session = getSession(from);
+    if (session.pendingLog) {
+        const { email, msgText, logData } = session.pendingLog;
+        await logInteraction(email, msgText, logData);
+        session.pendingLog = null;
+    }
+}
+
 // ═══════════════════════════════════════════════════
 //  ABRIR TICKET NO FRESHSERVICE
 // ═══════════════════════════════════════════════════
@@ -441,12 +450,41 @@ app.post('/google-chat', async (req, res) => {
             msgText = msgText.trim().toLowerCase();
             console.log(`📩 Nova mensagem de: ${from} — "${msgText}"`);
 
+            // Limpa/grava o log pendente anterior se o usuário enviar comandos de início ou encerramento
+            const triggerMenu = ['oi', 'olá', 'ola', 'bom dia', 'boa tarde', 'boa noite',
+                                 'menu', 'inicio', 'início', 'start', 'ajuda', 'suporte'];
+            const triggerEncerramento = ['encerrar', 'fim', 'tchau', 'obrigado', 'obrigada', 'valeu', 'vlw', 'fechar', 'cancelar'];
+
+            if (triggerMenu.includes(msgText) || triggerEncerramento.includes(msgText)) {
+                await flushPendingLog(from);
+            }
+
             const result = await handleMessage(from, msgText);
 
-            // Loga todas as interações relevantes (exceto navegação pura e erros)
-            if (result.logData && result.logData.categoria !== 'Navegação' && result.logData.categoria !== 'Erro') {
+            // Loga todas as interações relevantes (exceto onboarding, navegação pura e erros)
+            if (
+                result.logData && 
+                result.logData.categoria !== 'Onboarding' && 
+                result.logData.categoria !== 'Navegação' && 
+                result.logData.categoria !== 'Erro'
+            ) {
                 const finalEmail = getSession(from).email || from;
-                logInteraction(finalEmail, msgText, result.logData);
+
+                // Se abriu ticket, cancela o log pendente da folha (evita duplicar) e grava só o ticket
+                if (result.logData.categoria === 'Ticket' && result.logData.subcategoria === 'Abrir Chamado') {
+                    const session = getSession(from);
+                    session.pendingLog = null; // Cancela o log anterior
+                    await logInteraction(finalEmail, msgText, result.logData);
+                } else {
+                    // Se caiu em uma folha de FAQ, grava a anterior (se houver) e agenda esta
+                    await flushPendingLog(from);
+                    const session = getSession(from);
+                    session.pendingLog = {
+                        email: finalEmail,
+                        msgText: msgText,
+                        logData: result.logData
+                    };
+                }
             }
 
             return res.json(buildResponse(result.text || 'Desculpe, ocorreu um erro.'));

@@ -15,7 +15,7 @@ _(Ex: nome@ipnet.cloud)_`,
 
     emailConfirmado: `✅ E-mail *{email}* registrado com sucesso!
 
-Agora vamos ao seu atendimento.`,
+💡 *Dica rápida:* Navegue pelas opções abaixo para encontrar orientações de autoatendimento. Caso o passo a passo não resolva, você poderá abrir um chamado no final. 😉`,
 
     emailInvalido: `⚠️ Não reconheci esse e-mail.
 
