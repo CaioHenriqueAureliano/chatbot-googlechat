@@ -387,6 +387,14 @@ async function handleMessage(from, msgText) {
 
         // Se o usuário não pulou a etapa, valida o e-mail
         const lowerMsg = msgText.toLowerCase();
+        
+        if (lowerMsg === 'sim') {
+            return {
+                text: "Por favor, digite o *endereço de e-mail completo* do seu gestor (ex: nome@ipnet.cloud), e não apenas 'sim'.",
+                logData: { categoria: 'Ticket', subcategoria: 'Aprovação', problema: 'Digitou Sim' }
+            };
+        }
+
         if (lowerMsg !== 'não' && lowerMsg !== 'nao') {
             const isEmailValid = /^[^\s@]+@ipnet\.cloud$/i.test(msgText);
             if (!isEmailValid) {

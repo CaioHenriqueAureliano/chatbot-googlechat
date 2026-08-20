@@ -41,7 +41,10 @@ Por favor, lembre-se de usar exclusivamente o seu e-mail corporativo terminando 
 
 _(Digite *0* a qualquer momento para cancelar e voltar ao menu)_`,
 
-    pedirEmailGestor: `Anotado! 📝 Como essa solicitação requer aprovação, por favor, digite o *e-mail corporativo do seu gestor* (@ipnet.cloud) para adicioná-lo em cópia no chamado.
+    pedirEmailGestor: `Anotado! 📝 Você deseja colocar o seu gestor em cópia no chamado para fins de autorização?
+
+👉 Se **sim**, digite o *e-mail corporativo* dele (@ipnet.cloud).
+👉 Se **não**, digite *não* para prosseguirmos com a abertura.
 
 _(Digite *0* a qualquer momento para cancelar e voltar ao menu)_`,
 
