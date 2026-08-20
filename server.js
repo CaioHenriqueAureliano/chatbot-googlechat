@@ -112,7 +112,7 @@ async function flushPendingLog(from) {
 // ═══════════════════════════════════════════════════
 //  ABRIR TICKET NO FRESHSERVICE
 // ═══════════════════════════════════════════════════
-async function openFreshserviceTicket(email, session, descricaoUsuario) {
+async function openFreshserviceTicket(email, session, descricaoUsuario, ccEmail) {
     const apiKey = process.env.FRESHSERVICE_API_KEY || process.env.FRESHDESK_API_KEY;
     if (!apiKey) {
         throw new Error("As variáveis de ambiente FRESHSERVICE_API_KEY ou FRESHDESK_API_KEY não foram encontradas no Render.");
@@ -123,24 +123,30 @@ async function openFreshserviceTicket(email, session, descricaoUsuario) {
     const description = descricaoUsuario || `Chamado aberto via Chatbot Google Chat.<br><b>Problema:</b> ${logData.problema || '-'}`;
 
     try {
+        const payload = {
+            description,
+            subject: `[Chatbot GChat] ${logData.subcategoria || 'Suporte Interno IPNET'}`,
+            email,
+            priority: 1,
+            status: 2,
+            source: 3,
+            workspace_id: 2,
+            department_id: 17000222357,
+            group_id: 17000371025,
+            category: 'Suporte Interno',
+            custom_fields: {
+                classificao_g: 'Requisição',
+                utilizou_ia_para_a_resoluo_desse_ticket: 'Não'
+            }
+        };
+
+        if (ccEmail) {
+            payload.cc_emails = [ccEmail];
+        }
+
         const response = await axios.post(
             `https://ipnetcloud.freshservice.com/api/v2/tickets`,
-            {
-                description,
-                subject: `[Chatbot GChat] ${logData.subcategoria || 'Suporte Interno IPNET'}`,
-                email,
-                priority: 1,
-                status: 2,
-                source: 3,
-                workspace_id: 2,
-                department_id: 17000222357,
-                group_id: 17000371025,
-                category: 'Suporte Interno',
-                custom_fields: {
-                    classificao_g: 'Requisição',
-                    utilizou_ia_para_a_resoluo_desse_ticket: 'Não'
-                }
-            },
+            payload,
             { headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' } }
         );
         return { ticketId: response.data.ticket?.id || response.data.id, error: null };
@@ -361,20 +367,50 @@ async function handleMessage(from, msgText) {
         if (msgText === '0') {
             return goToMenu(from, 'menu_principal');
         }
-        // Qualquer texto diferente de '0' é a descrição do problema
+        
+        // Salva a descrição do problema na sessão
+        setSession(from, { descricaoChamado: msgText, state: 'aguardando_email_gestor' });
+        
+        return {
+            text: knowledge.pedirEmailGestor,
+            logData: { categoria: 'Ticket', subcategoria: 'Aprovação', problema: 'Aguardando Gestor' }
+        };
+    }
+
+    // ── AGUARDANDO E-MAIL DO GESTOR ──────────────────
+    if (state === 'aguardando_email_gestor') {
+        if (msgText === '0') {
+            return goToMenu(from, 'menu_principal');
+        }
+
+        let ccEmail = null;
+
+        // Se o usuário não pulou a etapa, valida o e-mail
+        const lowerMsg = msgText.toLowerCase();
+        if (lowerMsg !== 'não' && lowerMsg !== 'nao') {
+            const isEmailValid = /^[^\s@]+@ipnet\.cloud$/i.test(msgText);
+            if (!isEmailValid) {
+                return {
+                    text: knowledge.emailGestorInvalido,
+                    logData: { categoria: 'Ticket', subcategoria: 'Aprovação', problema: 'E-mail Inválido' }
+                };
+            }
+            ccEmail = msgText;
+        }
+
         let ticketId = null;
         let errorMsg = null;
         try {
-            const result = await openFreshserviceTicket(session.email, session, msgText);
+            const result = await openFreshserviceTicket(session.email, session, session.descricaoChamado, ccEmail);
             ticketId = result.ticketId;
             errorMsg = result.error;
-            if (ticketId) console.log(`✅ Chamado #${ticketId} criado no Freshservice para ${session.email}`);
+            if (ticketId) console.log(`✅ Chamado #${ticketId} criado no Freshservice para ${session.email} (CC: ${ccEmail || 'Nenhum'})`);
             else console.error('❌ Erro ao criar ticket:', errorMsg);
         } catch (e) {
             console.error('❌ Erro inesperado ao criar ticket:', e.message);
             errorMsg = e.message;
         }
-        setSession(from, { state: 'menu_principal' });
+        setSession(from, { state: 'menu_principal', descricaoChamado: null });
         if (ticketId) {
             return {
                 text: knowledge.chamadoAbertoSucesso.replace(/{ticketId}/g, ticketId),

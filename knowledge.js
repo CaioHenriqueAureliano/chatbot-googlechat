@@ -41,6 +41,14 @@ Por favor, lembre-se de usar exclusivamente o seu e-mail corporativo terminando 
 
 _(Digite *0* a qualquer momento para cancelar e voltar ao menu)_`,
 
+    pedirEmailGestor: `Anotado! 📝 Como essa solicitação requer aprovação, por favor, digite o *e-mail corporativo do seu gestor* (@ipnet.cloud) para adicioná-lo em cópia no chamado.
+
+_(Digite *0* a qualquer momento para cancelar e voltar ao menu)_`,
+
+    emailGestorInvalido: `⚠️ Formato ou domínio de e-mail inválido.
+
+Por favor, digite o *e-mail corporativo do seu gestor* terminando obrigatoriamente em *@ipnet.cloud*.`,
+
     chamadoAbertoSucesso: `✅ Seu chamado foi aberto com sucesso! 
 
 🎟️ **O número do seu ticket é o #{ticketId}**
