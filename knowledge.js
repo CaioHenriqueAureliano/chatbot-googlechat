@@ -46,9 +46,9 @@ _(Digite *0* a qualquer momento para cancelar e voltar ao menu)_`,
 🎟️ **O número do seu ticket é o #{ticketId}**
 🔗 Você pode acompanhar o ticket por aqui: https://ipnetcloud.freshservice.com/support/tickets/{ticketId}
 
-A nossa equipe técnica entrará em contato em breve e você receberá as atualizações por e-mail.
+A nossa equipe técnica assumirá a tratativa a partir de agora e você receberá as atualizações por e-mail.
 
-👉 Digite *menu* para voltar ao Menu Principal ou *0* para encerrar.`,
+👉 Digite *menu* se precisar de mais alguma coisa, ou *0* para encerrar nosso papo por aqui.`,
 
     encerramento: `Atendimento encerrado! Quando precisar de algo, é só mandar um oi. 👋`,
 
