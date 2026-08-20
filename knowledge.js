@@ -7,20 +7,31 @@
 
 const knowledge = {
 
-    // ── COLETA DE E-MAIL ─────────────────────────────────────
-    pedirEmail: `Olá! 👋 Sou o assistente de *Suporte Interno da IPNET by VIVO*.
+    // ── COLETA DE E-MAIL (Automática pelo Google Chat) ───────
+    saudacaoAutomatica: `Olá! 👋 Sou o assistente de *Suporte Interno da IPNET by VIVO*.
 
-Para iniciarmos o atendimento, por favor informe seu *e-mail corporativo*:
-_(Ex: nome@ipnet.cloud)_`,
+Autenticação realizada com sucesso para o e-mail: *{email}*.
+
+💡 *Dica rápida:* Navegue pelas opções abaixo para encontrar orientações de autoatendimento. Caso o passo a passo não resolva, você poderá abrir um chamado no final. 😉`,
+
+    acessoNegado: `⚠️ *Acesso Negado*
+
+Este assistente é exclusivo para colaboradores da IPNET. Identificamos que o e-mail em uso (*{email}*) não pertence ao domínio corporativo (@ipnet.cloud).
+
+Se você acredita que isto é um erro, por favor, entre em contato com a equipe de TI.`,
 
     emailConfirmado: `✅ E-mail *{email}* registrado com sucesso!
 
 💡 *Dica rápida:* Navegue pelas opções abaixo para encontrar orientações de autoatendimento. Caso o passo a passo não resolva, você poderá abrir um chamado no final. 😉`,
 
-    emailInvalido: `⚠️ Não reconheci esse e-mail.
+    emailInvalido: `⚠️ Não reconheci esse formato de e-mail.
 
 Por favor, digite seu *e-mail corporativo* no formato correto.
 _(Ex: nome@ipnet.cloud)_`,
+
+    emailDominioInvalido: `⚠️ O e-mail informado parece ser válido, mas não pertence ao nosso domínio.
+
+Por favor, lembre-se de usar exclusivamente o seu e-mail corporativo terminando em *@ipnet.cloud*.`,
 
     // ── VALIDAÇÃO DE PIN ─────────────────────────────────────
     // (Funcionalidade reservada para versões futuras)

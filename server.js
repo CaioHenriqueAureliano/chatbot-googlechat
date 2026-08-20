@@ -189,28 +189,22 @@ async function handleMessage(from, msgText) {
     const triggerMenu = ['oi', 'olá', 'ola', 'bom dia', 'boa tarde', 'boa noite',
                          'menu', 'inicio', 'início', 'start', 'ajuda', 'suporte'];
 
-    // ── ETAPA 1: COLETAR E-MAIL (Se não houver) ───────
+    // ── ETAPA 1: VALIDAR E-MAIL (Automático pelo Google Chat) ───────
     if (state === 'inicio' || (triggerMenu.includes(msgText) && !session.email)) {
-        setSession(from, { state: 'aguardando_email' });
-        return {
-            text: knowledge.pedirEmail,
-            logData: { categoria: 'Onboarding', subcategoria: 'Coleta de E-mail', problema: '-' }
-        };
-    }
+        // Verifica se "from" (que contém o email do Google Chat) é um email @ipnet.cloud
+        const isEmailValid = /^[^\s@]+@ipnet\.cloud$/i.test(from);
 
-    // ── ETAPA 2: VALIDAR E-MAIL ───────────────────────
-    if (state === 'aguardando_email') {
-        const isEmailValid = /^[^\s@]+@ipnet\.cloud$/i.test(msgText);
         if (isEmailValid) {
-            setSession(from, { email: msgText, state: 'menu_principal' });
+            setSession(from, { email: from, state: 'menu_principal' });
             return {
-                text: `${knowledge.emailConfirmado.replace('{email}', msgText)}\n\n${knowledge.menuPrincipal}`,
-                logData: { categoria: 'Onboarding', subcategoria: 'E-mail Válido', problema: '-' }
+                text: `${knowledge.saudacaoAutomatica.replace('{email}', from)}\n\n${knowledge.menuPrincipal}`,
+                logData: { categoria: 'Onboarding', subcategoria: 'Acesso Automático', problema: '-' }
             };
         } else {
+            setSession(from, { state: 'bloqueado' });
             return {
-                text: knowledge.emailInvalido,
-                logData: { categoria: 'Onboarding', subcategoria: 'E-mail Inválido', problema: '-' }
+                text: knowledge.acessoNegado.replace('{email}', from),
+                logData: { categoria: 'Onboarding', subcategoria: 'Acesso Negado', problema: 'Domínio Incorreto' }
             };
         }
     }
