@@ -227,6 +227,11 @@ async function handleMessage(from, msgText) {
     // ── MENU PRINCIPAL ──────────────────────────────
     if (state === 'menu_principal') {
         switch (msgText) {
+            case '0': 
+                return {
+                    text: knowledge.agradecimentoEncerramento,
+                    logData: { categoria: 'Navegação', subcategoria: 'Encerramento', problema: '-' }
+                };
             case '1': return goToMenu(from, 'menu_1');
             case '2': return goToMenu(from, 'menu_2');
             case '3': return goToMenu(from, 'menu_3');

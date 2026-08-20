@@ -48,7 +48,7 @@ _(Digite *0* a qualquer momento para cancelar e voltar ao menu)_`,
 
 A nossa equipe técnica entrará em contato em breve e você receberá as atualizações por e-mail.
 
-👉 Digite *menu* para voltar ao Menu Principal.`,
+👉 Digite *menu* para voltar ao Menu Principal ou *0* para encerrar.`,
 
     encerramento: `Atendimento encerrado! Quando precisar de algo, é só mandar um oi. 👋`,
 
